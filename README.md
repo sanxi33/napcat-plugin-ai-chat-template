@@ -2,8 +2,6 @@
 
 一个通用的 NapCat AI 群聊 / 私聊模板仓库。
 
-这份模板来自对 `napcat-plugin-qiubie-chat` 的源码级整理，目标是沉淀一套适合长期维护、未来可直接开源的插件骨架，而不是绑定某个具体角色。
-
 ## 适用场景
 
 - 需要在 QQ 群聊 / 私聊中扮演一个数字角色
@@ -63,21 +61,6 @@
 - [templates/relevance_prompt.md](./templates/relevance_prompt.md)
 - [templates/ai-model.example.json](./templates/ai-model.example.json)
 
-## 当前状态
-
-这份仓库目前还是本地草稿，还没有上传 GitHub。
-
-已经完成的事情：
-
-- 去掉私有角色和群成员映射
-- 去掉本机共享模块硬依赖
-- 抽出 AI 配置辅助模块
-- 抽出 QQ 备注解析模块
-- 抽出人设文件、动态记忆和 Prompt 模板
-- 补齐 Prompt 文件编辑 API
-- 补齐 WebUI Prompt 文件页
-- 完成主构建和 WebUI 构建验证
-- 补充基础单元测试
 
 ## 构建
 
@@ -99,14 +82,6 @@ pnpm run build
 ```powershell
 pnpm exec vitest run tests/prompt-utils.test.ts
 ```
-
-## 准备开源前建议
-
-在正式发布前，建议再做一次：
-
-1. 手动联调真实消息流
-2. 补充截图和示例配置说明
-3. 确认 `package.json` 元数据、Release 产物和索引流程都已对齐
 
 ## License
 
