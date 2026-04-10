@@ -1,0 +1,21 @@
+{
+  "enabled": true,
+  "debug": false,
+  "groupConfigs": {},
+  "aiConfigPath": "",
+  "keywordRegex": "^.*(机器人|助手|bot).*$",
+  "groupReplyProbability": 0.01,
+  "groupMaxReplyChars": 20,
+  "relevanceEnabled": true,
+  "relevanceModel": "",
+  "relevanceThreshold": 0.35,
+  "relevanceTimeoutMs": 2000,
+  "relevanceProfilePath": "assistant_profile_relevance.md",
+  "relevancePromptPath": "relevance_prompt.md",
+  "profilePath": "assistant_profile.md",
+  "memoryProfilePath": "assistant_memory.md",
+  "systemPromptPath": "system_prompt.md",
+  "profileCacheSeconds": 30,
+  "groupEventExportEnabled": false,
+  "groupEventExportPath": "data/group_events_inbox.jsonl"
+}
