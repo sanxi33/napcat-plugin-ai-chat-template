@@ -1,141 +1,98 @@
 # napcat-plugin-ai-chat-template
 
-一个通用的 NapCat AI 群聊 / 私聊模板插件。
+一个可以直接安装到 NapCat 的 AI 聊天插件模板。
 
-它的设计目标很简单：
+如果你刚装好 NapCat，正在找一个“装上就能聊天、之后还能慢慢改人设和提示词”的第三方插件，这个仓库就是为这种场景准备的。
 
-- 新用户可以先用最少的配置把插件跑起来
-- 熟悉之后，再逐步启用图片理解、相关性评分、动态记忆等高级能力
+它不是面向框架开发者的空白脚手架，而是一个已经带好基础能力的模板插件：
+
+- 能在群聊和私聊里回复
+- 能识别 `@机器人`、关键词、回复机器人消息
+- 能通过 WebUI 直接修改人设和 Prompt
+- 后续如果你愿意，也可以继续折腾图片理解、随机接话、相关性评分这些高级功能
 
 ![仪表盘预览](./assets/screenshots/dashboard.png)
 
-## 你最需要先知道的事
+## 这个插件适合谁
 
-**默认情况下，你只需要准备一个主模型，就可以开始使用这个模板。**
+适合这类用户：
 
-不需要一上来就理解三种模型。
+- 刚装好 NapCat，想先装一个能用的 AI 聊天插件
+- 不想一上来就读很多源码
+- 想先跑起来，再慢慢改角色设定
+- 希望大部分配置都能在 WebUI 里完成
 
-### 默认最小可用方案
+不适合这类用户：
 
-只需要：
+- 只想拿一个完全做好的固定角色插件，完全不想自己配模型
+- 不打算准备任何 AI 模型配置
 
-1. 一个主模型配置
-2. 一份主人设
-3. 一次构建
+## 装上之后能做什么
 
-就能跑起来。
+默认支持这些行为：
 
-下面这些都是可选增强项，不配也不影响基础聊天：
+- 群聊里被 `@` 时回复
+- 命中关键词时回复
+- 回复机器人上一条消息时回复
+- 私聊里始终回复
+- 在 WebUI 里直接编辑：
+  - 主人设
+  - 动态记忆
+  - 相关性人设
+  - 系统 Prompt
+  - 相关性 Prompt
 
-- 视觉模型
-- 相关性评分专用模型
-- 随机接话
-- 动态记忆导出管道
+## 最少需要准备什么
 
-## 最低可用方案
+如果你只想把它跑起来，最少只需要准备一件事：
 
-### 1. 安装依赖
+- **一个可用的主模型配置**
 
-```powershell
-pnpm install
-```
+也就是说，第一次使用时：
 
-### 2. 构建插件
+- 不需要先理解视觉模型
+- 不需要先理解相关性评分模型
+- 不需要先理解所有 Prompt 文件的区别
 
-```powershell
-pnpm run build
-```
+先把主模型配好，这个插件就能工作。
 
-### 3. 准备 AI 配置
+## 安装步骤
 
-从这个最简文件开始：
+### 1. 下载插件
+
+从 Releases 下载最新版本：
+
+- [Releases](https://github.com/sanxi33/napcat-plugin-ai-chat-template/releases)
+
+下载文件名通常是：
+
+- `napcat-plugin-ai-chat-template.zip`
+
+### 2. 导入 NapCat
+
+在 NapCat 插件管理里导入这个 zip。
+
+### 3. 配置主模型
+
+先从这个文件开始：
 
 - [templates/ai-model.example.json](./templates/ai-model.example.json)
 
-它默认只包含一个 `main` 模型配置。
+把它复制一份，填入你自己的：
 
-你只需要：
+- `apiBaseUrl`
+- `apiKey`
+- `model`
 
-1. 复制它
-2. 填入自己的 `apiBaseUrl`、`apiKey`、`model`
-3. 在插件配置里把 `aiConfigPath` 指向这份文件
+然后在插件配置页把 `aiConfigPath` 指向这份文件。
 
-### 4. 调整主人设
+### 4. 启动插件
 
-先只改这两个文件就够了：
+插件启动后，你就可以先用默认行为测试聊天了。
 
-- [templates/assistant_profile.md](./templates/assistant_profile.md)
-- [templates/assistant_memory.md](./templates/assistant_memory.md)
+### 5. 再去改人设
 
-### 5. 导入 NapCat
-
-构建产物位于：
-
-- `dist/index.mjs`
-- `dist/package.json`
-- `dist/webui/index.html`
-- `dist/templates/*`
-
-你可以把这些文件打包成 zip，然后在 NapCat 插件管理中导入。
-
-## 默认行为
-
-为了降低新用户心智负担，这个模板默认是：
-
-- `groupReplyProbability = 0`
-- `relevanceEnabled = false`
-
-这意味着：
-
-- 群聊里只有明确触发才回复：
-  - `@机器人`
-  - 命中关键词
-  - 回复机器人消息
-- 不会默认随机插话
-
-这样新用户先跑通，再逐步加高级能力，会更稳。
-
-## 进阶能力
-
-等你用顺手之后，再考虑这些增强项：
-
-### 图片理解
-
-如果你增加：
-
-- `vision` 模型配置
-
-插件就能给图片生成描述，再把描述拼进模型输入。
-
-如果不配置视觉模型，插件仍然能正常运行，只是不会理解图片内容。
-
-### 相关性评分
-
-如果你开启：
-
-- `relevanceEnabled = true`
-
-插件才会开始在群聊里做“要不要随机接话”的判断。
-
-此时有两种用法：
-
-1. **简单用法**
-   不额外配置 `relevance` 模型
-   这时相关性评分会自动复用 `main` 模型
-
-2. **进阶用法**
-   再单独配置 `relevance` 模型
-   这样可以把评分和主回复分离
-
-### 高级 AI 配置示例
-
-如果你想把主模型、视觉模型、相关性模型拆开，可以参考：
-
-- [templates/ai-model.advanced.example.json](./templates/ai-model.advanced.example.json)
-
-## Prompt 文件体系
-
-模板默认使用以下 5 个文件：
+等它能正常回复以后，再到 WebUI 的 “Prompt 文件” 页面慢慢改：
 
 - `assistant_profile.md`
 - `assistant_memory.md`
@@ -143,15 +100,58 @@ pnpm run build
 - `system_prompt.md`
 - `relevance_prompt.md`
 
-推荐拼装方式：
+## 默认配置思路
 
-- 主回复：`assistant_profile.md + assistant_memory.md`
-- 相关性评分：`assistant_profile_relevance.md + assistant_memory.md`
+为了让第一次使用更轻松，这个模板默认是偏保守的：
+
+- `groupReplyProbability = 0`
+- `relevanceEnabled = false`
 
 这意味着：
 
-- 静态人设可以分开维护
-- 动态记忆只维护一份
+- 群聊里只有明确触发才回复
+- 不会默认随机插话
+
+这样新用户更容易判断“插件是不是正常工作”，不会因为随机接话和评分逻辑把自己绕晕。
+
+## 如果不配高级功能，会怎么样
+
+### 不配视觉模型
+
+没关系，插件仍然可以正常聊天。
+
+只是：
+
+- 看不懂图片内容
+
+### 不开相关性评分
+
+也没关系，插件仍然可以正常工作。
+
+只是：
+
+- 不会做“随机接话前先判断值不值得回复”
+
+### 不改相关性人设和相关性 Prompt
+
+也没关系，先放着就行。
+
+等你用顺了，再去调它们。
+
+## 什么时候再看进阶配置
+
+建议等你完成下面这些之后，再看高级项：
+
+1. 插件已经能正常回复
+2. 主人设已经改成你想要的样子
+3. 你已经知道它在群聊里的基本表现
+
+然后再考虑：
+
+- 开启随机接话
+- 开启相关性评分
+- 配置视觉模型
+- 深度调整 Prompt 模板
 
 ## WebUI 预览
 
@@ -166,21 +166,6 @@ pnpm run build
 ### 群管理
 
 ![群管理预览](./assets/screenshots/groups.png)
-
-## WebUI 页面
-
-- 仪表盘
-- 插件配置
-- Prompt 文件
-- 群管理
-
-其中 “Prompt 文件” 页面可以直接编辑：
-
-- 主人设
-- 动态记忆
-- 相关性人设
-- 系统 Prompt
-- 相关性 Prompt
 
 ## 仓库结构
 
@@ -197,29 +182,25 @@ pnpm run build
 - `ARCHITECTURE.md`
   架构说明
 
+## 给愿意折腾的人
+
+如果你不只是想“装一个插件”，而是想把它改成自己的角色插件，这个仓库也已经准备好了：
+
+- Prompt 已全部外置
+- 动态记忆独立
+- WebUI 可直接编辑文件
+- 已带测试
+- 已带 Release 工作流和 NapCat 官方索引更新工作流
+
+进一步说明见：
+
+- [ARCHITECTURE.md](./ARCHITECTURE.md)
+
 ## 测试
 
 ```powershell
 pnpm test
 ```
-
-## 发布
-
-仓库已内置：
-
-- GitHub Release 工作流
-- NapCat 官方索引自动更新工作流
-
-当你准备发布自己的版本时，只需要：
-
-1. 更新模板内容和 `package.json`
-2. 配置仓库 secret：`INDEX_PAT`
-3. 推送 tag，例如 `v0.1.0`
-
-## 参考文档
-
-- [ARCHITECTURE.md](./ARCHITECTURE.md)
-- [config.example.json](./config.example.json)
 
 ## License
 
