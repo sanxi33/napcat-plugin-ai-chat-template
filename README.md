@@ -72,6 +72,12 @@
 
 在 NapCat 插件管理里导入这个 zip。
 
+如果你的 NapCat 版本是 `4.15.19` 或更高，也可以直接从 GitHub README 点下面这个按钮跳到安装界面：
+
+<a href="https://napneko.github.io/napcat-plugin-index?pluginId=napcat-plugin-ai-chat-template" target="_blank">
+  <img src="https://github.com/NapNeko/napcat-plugin-index/blob/pages/button.png?raw=true" alt="在 NapCat WebUI 中打开" width="170">
+</a>
+
 ### 3. 配置主模型
 
 先从这个文件开始：
