@@ -285,7 +285,7 @@ async function getRelevanceScore(input: {
   senderName: string;
   messageId?: string;
 }): Promise<{ score: number; reason: string }> {
-  if (!pluginState.config.relevanceEnabled) return { score: 0.5, reason: 'disabled' };
+  if (!pluginState.config.relevanceEnabled) return { score: 1, reason: 'disabled' };
 
   const contextRows = await fetchRecentGroupContext(input.ctx, input.groupId, input.profile, input.messageId);
   const messageText = cleanText(input.text || input.rawMessage || '');

@@ -9,9 +9,9 @@ export const DEFAULT_CONFIG: PluginConfig = {
   aiConfigPath: '',
 
   keywordRegex: '^.*(机器人|助手|bot).*$',
-  groupReplyProbability: 0.01,
+  groupReplyProbability: 0,
   groupMaxReplyChars: 20,
-  relevanceEnabled: true,
+  relevanceEnabled: false,
   relevanceModel: '',
   relevanceThreshold: 0.35,
   relevanceTimeoutMs: 2000,

@@ -3,15 +3,5 @@
     "apiBaseUrl": "https://api.openai.com/v1",
     "apiKey": "sk-xxx",
     "model": "gpt-4.1-mini"
-  },
-  "vision": {
-    "apiBaseUrl": "https://api.openai.com/v1",
-    "apiKey": "sk-xxx",
-    "model": "gpt-4.1-mini"
-  },
-  "relevance": {
-    "apiBaseUrl": "https://api.openai.com/v1",
-    "apiKey": "sk-xxx",
-    "model": "gpt-4.1-mini"
   }
 }

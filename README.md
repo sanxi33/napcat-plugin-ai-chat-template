@@ -2,41 +2,136 @@
 
 一个通用的 NapCat AI 群聊 / 私聊模板插件。
 
-它来自对实际项目的源码级整理，适合作为你自己的角色化聊天插件起点：提示词全部外置、动态记忆可独立维护、相关性评分可控，并且自带可直接使用的 WebUI 管理面板。
+它的设计目标很简单：
+
+- 新用户可以先用最少的配置把插件跑起来
+- 熟悉之后，再逐步启用图片理解、相关性评分、动态记忆等高级能力
 
 ![仪表盘预览](./assets/screenshots/dashboard.png)
 
-## 适用场景
+## 你最需要先知道的事
 
-- 需要在 QQ 群聊 / 私聊中扮演一个数字角色
-- 需要 `@机器人`、关键词、回复机器人消息、随机接话这些基础触发逻辑
-- 需要相关性评分来控制“该不该回”
-- 需要把人设、 Prompt、动态记忆从代码中拆出去
-- 需要 WebUI 直接管理配置和 Prompt 文件
+**默认情况下，你只需要准备一个主模型，就可以开始使用这个模板。**
 
-## 特性
+不需要一上来就理解三种模型。
 
-- 支持群聊 / 私聊两种会话模式
-- 支持 `@机器人`、关键词、回复机器人消息触发
-- 支持基于相关性评分的随机接话
-- 支持图片理解
-- 支持群维度启用 / 禁用
-- 支持群聊事件导出为 JSONL
-- 支持在 WebUI 中直接编辑 Prompt / Profile 文件
+### 默认最小可用方案
 
-## WebUI 预览
+只需要：
 
-### 插件配置
+1. 一个主模型配置
+2. 一份主人设
+3. 一次构建
 
-![插件配置预览](./assets/screenshots/config.png)
+就能跑起来。
 
-### Prompt 文件编辑
+下面这些都是可选增强项，不配也不影响基础聊天：
 
-![Prompt 文件预览](./assets/screenshots/prompt-files.png)
+- 视觉模型
+- 相关性评分专用模型
+- 随机接话
+- 动态记忆导出管道
 
-### 群管理
+## 最低可用方案
 
-![群管理预览](./assets/screenshots/groups.png)
+### 1. 安装依赖
+
+```powershell
+pnpm install
+```
+
+### 2. 构建插件
+
+```powershell
+pnpm run build
+```
+
+### 3. 准备 AI 配置
+
+从这个最简文件开始：
+
+- [templates/ai-model.example.json](./templates/ai-model.example.json)
+
+它默认只包含一个 `main` 模型配置。
+
+你只需要：
+
+1. 复制它
+2. 填入自己的 `apiBaseUrl`、`apiKey`、`model`
+3. 在插件配置里把 `aiConfigPath` 指向这份文件
+
+### 4. 调整主人设
+
+先只改这两个文件就够了：
+
+- [templates/assistant_profile.md](./templates/assistant_profile.md)
+- [templates/assistant_memory.md](./templates/assistant_memory.md)
+
+### 5. 导入 NapCat
+
+构建产物位于：
+
+- `dist/index.mjs`
+- `dist/package.json`
+- `dist/webui/index.html`
+- `dist/templates/*`
+
+你可以把这些文件打包成 zip，然后在 NapCat 插件管理中导入。
+
+## 默认行为
+
+为了降低新用户心智负担，这个模板默认是：
+
+- `groupReplyProbability = 0`
+- `relevanceEnabled = false`
+
+这意味着：
+
+- 群聊里只有明确触发才回复：
+  - `@机器人`
+  - 命中关键词
+  - 回复机器人消息
+- 不会默认随机插话
+
+这样新用户先跑通，再逐步加高级能力，会更稳。
+
+## 进阶能力
+
+等你用顺手之后，再考虑这些增强项：
+
+### 图片理解
+
+如果你增加：
+
+- `vision` 模型配置
+
+插件就能给图片生成描述，再把描述拼进模型输入。
+
+如果不配置视觉模型，插件仍然能正常运行，只是不会理解图片内容。
+
+### 相关性评分
+
+如果你开启：
+
+- `relevanceEnabled = true`
+
+插件才会开始在群聊里做“要不要随机接话”的判断。
+
+此时有两种用法：
+
+1. **简单用法**
+   不额外配置 `relevance` 模型
+   这时相关性评分会自动复用 `main` 模型
+
+2. **进阶用法**
+   再单独配置 `relevance` 模型
+   这样可以把评分和主回复分离
+
+### 高级 AI 配置示例
+
+如果你想把主模型、视觉模型、相关性模型拆开，可以参考：
+
+- [templates/ai-model.advanced.example.json](./templates/ai-model.advanced.example.json)
 
 ## Prompt 文件体系
 
@@ -53,87 +148,39 @@
 - 主回复：`assistant_profile.md + assistant_memory.md`
 - 相关性评分：`assistant_profile_relevance.md + assistant_memory.md`
 
-这样可以把主回复和相关性评分的人设分开，同时共享同一份动态记忆。
+这意味着：
 
-## 快速开始
+- 静态人设可以分开维护
+- 动态记忆只维护一份
 
-### 方式一：作为现成插件安装
+## WebUI 预览
 
-适合只想用模板，不打算修改源码的人。
+### 插件配置
 
-1. 打开 Releases，下载最新的 `napcat-plugin-ai-chat-template.zip`
-2. 在 NapCat 插件管理中导入压缩包
-3. 启动插件一次，让它自动生成默认的 prompt / profile 文件
-4. 在 WebUI 中填写 `aiConfigPath`，或指向你自己的 AI 配置文件
-5. 根据需要编辑 Prompt 文件页中的人设和模板
+![插件配置预览](./assets/screenshots/config.png)
 
-### 方式二：从源码开发
+### Prompt 文件编辑
 
-适合准备基于这个模板继续开发自己插件的人。
+![Prompt 文件预览](./assets/screenshots/prompt-files.png)
 
-1. 安装依赖
+### 群管理
 
-```powershell
-pnpm install
-```
+![群管理预览](./assets/screenshots/groups.png)
 
-2. 构建插件
+## WebUI 页面
 
-```powershell
-pnpm run build
-```
+- 仪表盘
+- 插件配置
+- Prompt 文件
+- 群管理
 
-3. 使用构建产物
+其中 “Prompt 文件” 页面可以直接编辑：
 
-构建完成后，运行产物位于：
-
-- `dist/index.mjs`
-- `dist/package.json`
-- `dist/webui/index.html`
-- `dist/templates/*`
-
-你可以：
-
-- 将这些文件打包成 zip 导入 NapCat
-- 或手动放入 NapCat 的插件目录
-
-4. 按需修改示例配置和模板文件
-
-- [config.example.json](./config.example.json)
-- [templates/assistant_profile.md](./templates/assistant_profile.md)
-- [templates/assistant_memory.md](./templates/assistant_memory.md)
-- [templates/assistant_profile_relevance.md](./templates/assistant_profile_relevance.md)
-- [templates/system_prompt.md](./templates/system_prompt.md)
-- [templates/relevance_prompt.md](./templates/relevance_prompt.md)
-- [templates/ai-model.example.json](./templates/ai-model.example.json)
-
-## AI 配置说明
-
-这个模板不会自带可直接使用的模型密钥。
-
-你需要准备一份自己的 AI 配置文件。可以从这里开始：
-
-- [templates/ai-model.example.json](./templates/ai-model.example.json)
-
-推荐做法：
-
-1. 复制 `templates/ai-model.example.json`
-2. 填入你自己的 `apiBaseUrl`、`apiKey`、`model`
-3. 在插件配置里把 `aiConfigPath` 指向这份文件
-
-如果不配置真实可用的 AI 文件，插件结构虽然能启动，但聊天功能不会真正可用。
-
-## 第一次启动后会生成什么
-
-插件第一次运行时，会自动生成或初始化这些文件：
-
-- `assistant_profile.md`
-- `assistant_memory.md`
-- `assistant_profile_relevance.md`
-- `system_prompt.md`
-- `relevance_prompt.md`
-
-后续你可以在 WebUI 的 “Prompt 文件” 页面直接编辑它们，不需要手改源码。
+- 主人设
+- 动态记忆
+- 相关性人设
+- 系统 Prompt
+- 相关性 Prompt
 
 ## 仓库结构
 
@@ -149,21 +196,6 @@ pnpm run build
   基础单元测试
 - `ARCHITECTURE.md`
   架构说明
-
-## 构建
-
-主构建：
-
-```powershell
-pnpm run build
-```
-
-WebUI 单独构建：
-
-```powershell
-cd src/webui
-pnpm run build
-```
 
 ## 测试
 
