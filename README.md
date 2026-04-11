@@ -57,6 +57,20 @@
 
 ## 快速开始
 
+### 方式一：作为现成插件安装
+
+适合只想用模板，不打算修改源码的人。
+
+1. 打开 Releases，下载最新的 `napcat-plugin-ai-chat-template.zip`
+2. 在 NapCat 插件管理中导入压缩包
+3. 启动插件一次，让它自动生成默认的 prompt / profile 文件
+4. 在 WebUI 中填写 `aiConfigPath`，或指向你自己的 AI 配置文件
+5. 根据需要编辑 Prompt 文件页中的人设和模板
+
+### 方式二：从源码开发
+
+适合准备基于这个模板继续开发自己插件的人。
+
 1. 安装依赖
 
 ```powershell
@@ -69,7 +83,21 @@ pnpm install
 pnpm run build
 ```
 
-3. 按需修改示例配置和模板文件
+3. 使用构建产物
+
+构建完成后，运行产物位于：
+
+- `dist/index.mjs`
+- `dist/package.json`
+- `dist/webui/index.html`
+- `dist/templates/*`
+
+你可以：
+
+- 将这些文件打包成 zip 导入 NapCat
+- 或手动放入 NapCat 的插件目录
+
+4. 按需修改示例配置和模板文件
 
 - [config.example.json](./config.example.json)
 - [templates/assistant_profile.md](./templates/assistant_profile.md)
@@ -78,6 +106,34 @@ pnpm run build
 - [templates/system_prompt.md](./templates/system_prompt.md)
 - [templates/relevance_prompt.md](./templates/relevance_prompt.md)
 - [templates/ai-model.example.json](./templates/ai-model.example.json)
+
+## AI 配置说明
+
+这个模板不会自带可直接使用的模型密钥。
+
+你需要准备一份自己的 AI 配置文件。可以从这里开始：
+
+- [templates/ai-model.example.json](./templates/ai-model.example.json)
+
+推荐做法：
+
+1. 复制 `templates/ai-model.example.json`
+2. 填入你自己的 `apiBaseUrl`、`apiKey`、`model`
+3. 在插件配置里把 `aiConfigPath` 指向这份文件
+
+如果不配置真实可用的 AI 文件，插件结构虽然能启动，但聊天功能不会真正可用。
+
+## 第一次启动后会生成什么
+
+插件第一次运行时，会自动生成或初始化这些文件：
+
+- `assistant_profile.md`
+- `assistant_memory.md`
+- `assistant_profile_relevance.md`
+- `system_prompt.md`
+- `relevance_prompt.md`
+
+后续你可以在 WebUI 的 “Prompt 文件” 页面直接编辑它们，不需要手改源码。
 
 ## 仓库结构
 
