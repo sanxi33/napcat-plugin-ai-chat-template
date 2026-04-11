@@ -31,6 +31,7 @@
     "@types/express": "^5.0.6",
     "@types/node": "^20.19.33",
     "napcat-plugin-debug-cli": "^1.2.8",
+    "playwright-core": "^1.59.1",
     "typescript": "^5.9.3",
     "vite": "^6.4.1",
     "vitest": "^4.1.4",
@@ -45,6 +46,7 @@
     "push": "vite build",
     "deploy": "vite build",
     "typecheck": "tsc --noEmit",
-    "test": "vitest run"
+    "test": "vitest run",
+    "screenshots": "node scripts/generate-screenshots.mjs"
   }
 }
